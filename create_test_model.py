@@ -4,6 +4,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 import joblib
 
+
+
 # Load your dataset
 file_path = './data_set.csv'
 data = pd.read_csv(file_path)
