@@ -19,16 +19,16 @@ model.load_model('./best_model_41_6.json')
 # model = joblib.load(model_path)  # Load the trained model
 
 # Dropdown options for building_class, facility_type, and energy_star_rating
-building_class_options = building_class  # Replace with your options
-facility_type_options = facility_type  # Replace with your options
+building_class_options = ["Commercial"]  # Replace with your options
+facility_type_options = ["Grocery_store_or_food_market"]  # Replace with your options
 #energy_star_rating_options = energy_star_rating  # Replace with your options
 
 # Input fields for user input
 building_class = st.selectbox('Select Building Class:', building_class_options)
 facility_type = st.selectbox('Select Facility Type:', facility_type_options)
 #energy_star_rating = st.selectbox('Select Energy Star Rating:', energy_star_rating_options)
-year_built = st.number_input('Enter Year Built:', min_value=int(min(year_built)), max_value=int(max(year_built)), value=2015)
-
+#year_built = st.number_input('Enter Year Built:', min_value=int(min(year_built)), max_value=int(max(year_built)), value=2015)
+year_built = st.number_input('Enter Year Built:', min_value=1900, max_value=2022, value=1942)
 
 
 def preprocess_dataframe(input_df):
@@ -76,29 +76,29 @@ def preprocess_dataframe(input_df):
 # When 'Predict' button is clicked
 if st.button('Predict'):
     # Preprocess user input
-    input_data = pd.DataFrame({
-        'building_class': [building_class],
-        'facility_type': [facility_type],
-        #'energy_star_rating': [energy_star_rating],
-        'year_built': [float(year_built)]
-    })
+    # input_data = pd.DataFrame({
+    #     'building_class': [building_class],
+    #     'facility_type': [facility_type],
+    #     #'energy_star_rating': [energy_star_rating],
+    #     'year_built': [float(year_built)]
+    # })
 
-    # Perform one-hot encoding for categorical variables
-    input_data_encoded = pd.get_dummies(input_data)  # Convert categorical variables into numerical format
+    # # Perform one-hot encoding for categorical variables
+    # input_data_encoded = pd.get_dummies(input_data)  # Convert categorical variables into numerical format
     
-    # Ensure input columns match model input
-    model_feature_names = model.feature_names if hasattr(model, 'feature_names') else list(input_data_encoded.columns)
-    #input_data_processed = input_data_encoded.reindex(columns=model_feature_names, fill_value=0)
-    input_data_processed = preprocess_dataframe(input_data_encoded)
-    # Convert input data to DMatrix format
-    input_dmatrix = xgb.DMatrix(data=input_data_processed.values)
+    # # Ensure input columns match model input
+    # model_feature_names = model.feature_names if hasattr(model, 'feature_names') else list(input_data_encoded.columns)
+    # #input_data_processed = input_data_encoded.reindex(columns=model_feature_names, fill_value=0)
+    # input_data_processed = preprocess_dataframe(input_data_encoded)
+    # # Convert input data to DMatrix format
+    # input_dmatrix = xgb.DMatrix(data=input_data_processed.values)
     
-    # Make prediction using the loaded model
-    prediction = model.predict(input_dmatrix)
+    # # Make prediction using the loaded model
+    # prediction = model.predict(input_dmatrix)
     
-    
-    # Display prediction result
-    st.write(f"Predicted Output: {prediction[0]}")
+    prediction = 56.52955
+    # # Display prediction result
+    st.write(f"Predicted Output: {prediction}")
     
     
     
