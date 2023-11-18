@@ -1,37 +1,48 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import joblib
+import xgboost as xgb
+
+from helpers import building_class, facility_type, energy_star_rating, year_built
+
 
 st.title('Savvy Sisters Green Buildings')
 
-if 'peptide_input' not in st.session_state:
-  st.session_state.peptide_input = ''
 
-# Input peptide
-st.sidebar.subheader('Input peptide sequence')
+# Load the trained model
+model = xgb.XGBRegressor()
+model.load_model('./best_model_41_6.json')
+# model_path = './demo_model.pkl'
+# model = joblib.load(model_path)  # Load the trained model
 
-def insert_active_peptide_example():
-    st.session_state.peptide_input = 'LLNQELLLNPTHQIYPVA'
+# Dropdown options for building_class, facility_type, and energy_star_rating
+building_class_options = building_class  # Replace with your options
+facility_type_options = facility_type  # Replace with your options
+energy_star_rating_options = energy_star_rating  # Replace with your options
 
-def insert_inactive_peptide_example():
-    st.session_state.peptide_input = 'KSAGYDVGLAGNIGNSLALQVAETPHEYYV'
+# Input fields for user input
+building_class = st.selectbox('Select Building Class:', building_class_options)
+facility_type = st.selectbox('Select Facility Type:', facility_type_options)
+energy_star_rating = st.selectbox('Select Energy Star Rating:', energy_star_rating_options)
+year_built = st.number_input('Enter Year Built:', min_value=int(min(year_built)), max_value=int(max(year_built)), value=2015)
 
-def clear_peptide():
-    st.session_state.peptide_input = ''
+# When 'Predict' button is clicked
+if st.button('Predict'):
+    # Preprocess user input
+    input_data = pd.DataFrame({
+        'building_class': [building_class],
+        'facility_type': [facility_type],
+        'energy_star_rating': [energy_star_rating],
+        'year_built': [year_built]
+    })
 
-peptide_seq = st.sidebar.text_input('Enter peptide sequence', st.session_state.peptide_input, key='peptide_input', help='Be sure to enter a valid sequence')
-st.sidebar.button('Example of an active AMP', on_click=insert_active_peptide_example)
-st.sidebar.button('Example of an inactive peptide', on_click=insert_inactive_peptide_example)
-st.sidebar.button('Clear input', on_click=clear_peptide)
+    # Make prediction using the loaded model
+    prediction = model.predict(input_data)
+    
+    # Display prediction result
+    st.write(f"Predicted Output: {prediction}")
 
-if st.session_state.peptide_input == '':
-  st.subheader('Welcome to the app!')
-  st.info('Enter peptide sequence in the sidebar to proceed', icon='👈')
-else:
-  st.subheader('⚛️ Input peptide:')
-  st.info(peptide_seq)
 
-col1, col2, col3 = st.columns(3)
-col1.metric("Temperature", "70 °F", "1.2 °F")
-col2.metric("Wind", "9 mph", "-8%")
-col3.metric("Humidity", "86%", "4%")
+
+
