@@ -10,14 +10,11 @@ from helpers import building_class, facility_type, energy_star_rating, year_buil
 st.title('Savvy Sisters Green Buildings')
 
 
-# Load the JSON format model
-model_path = './best_model_41_6.json.json'
-with open(model_path, 'r') as f:
-    model_json = json.load(f)
-
-# Load the model from JSON
-model = xgb.Booster(model_file=model_json)
-
+# Load the trained model
+model = xgb.XGBRegressor()
+model.load_model('./best_model_41_6.json')
+# model_path = './demo_model.pkl'
+# model = joblib.load(model_path)  # Load the trained model
 
 # Dropdown options for building_class, facility_type, and energy_star_rating
 building_class_options = building_class  # Replace with your options

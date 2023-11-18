@@ -10,4 +10,3 @@ facility_type = df['facility_type'].unique().tolist()
 energy_star_rating = df['energy_star_rating'].unique().tolist()
 year_built = sorted(df['year_built'].unique().tolist())
 
-print(year_built)
